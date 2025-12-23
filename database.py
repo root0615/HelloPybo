@@ -1,3 +1,5 @@
+# import contextlib
+
 # create_engine: 데이터베이스와 실제로 연결을 만들어주는 Engine을 생성하는 함수이다. SQL을 실행하고 커넥션 풀을 관리하는 핵심 객체
 from sqlalchemy import create_engine
 # declarative_base : ORM 모델(테이블과 매핑되는 클래스)을 만들 때 공통 부모 클래스를 생성해주는 함수이며
@@ -27,3 +29,44 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # ORM 베이스 클래스 만듦
 Base = declarative_base()
+
+"""
+# @contextlib.contextmanager
+해당 어노테이션은 with문에서 사용할 수 있는 컨텍스트 매니저 객체를 클래스를 만들지 않고 함수로 정의하게 해주는 데코레이터
+try/finally로 세션을 가져왔다가 반환하는 반복되는 상황을 편리하게 만들 수 있으며, with문 하나로 안전하게 묶어주는 역할이다.
+
+with get_db() as db:
+    # 여기서 db 세션 객체를 사용
+
+하지만 FastAPI의 Depends를 사용할 경우 종속성 주입이 제대로 이루어지지 않아 해당 어노테이션을 제거해야한다.
+"""
+# @contextlib.contextmanager
+def get_db():
+    db = SessionLocal()
+    try:
+        # 제너레이터 방식을 사용해서 세션을 반환한다.
+        yield db
+    finally:
+        db.close()
+
+"""
+# 제너레이터란 무엇인가?
+제너레이터를 알기 전에 이터레이터를 알아야한다.
+이터레이터(iterator)란 next() 함수 호출 시 계속 그 다음 값을 반환하는 객체
+예를 들어 리스트와 같은 객체를 반복 가능 객체라 하는데(리스트가 이터레이터라는건 아님) 
+이터레이터 객체는 next() 함수로 모두 호출한 후 재 호출 시 다시 읽을 수 없다는 특징이 있다.
+
+제너레이터는 이터레이터를 생성해주는 함수이다. 이터레이터와 마찬가지로 netx() 함수로 값을 차례대로 얻을 수 있는데
+차례대로 결과를 반환하고자 return이 아닌 yield 키워드를 사용한다.
+
+def example():
+    yield 'a'
+    yield 'b'
+    yield 'c'
+
+g = example()
+
+next(g) => 'a'
+next(g) => 'b'
+next(g) => 'c'
+"""
