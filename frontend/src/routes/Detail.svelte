@@ -4,6 +4,7 @@
     export let params = {}
     let question_id = params.question_id
     // console.log('question_id:' + question_id)
+    // 질문 한 건에 대한 상세 정보이므로 {} 로 초기화 해야한다
     let question = {}
 
     function get_question() {
