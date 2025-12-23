@@ -29,9 +29,11 @@
   // svelte-spa-router : 스벨트에서 라우터 기능을 담당하는 라이브러리
   import Router from 'svelte-spa-router'
   import Home from "./routes/Home.svelte"
+  import Detail from "./routes/Detail.svelte"
 
   const routes = {
     '/': Home,
+    '/detail/:question_id': Detail,
   }
 </script>
 

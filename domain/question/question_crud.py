@@ -8,3 +8,7 @@ def get_question_list(db: Session):
         .all()
     return question_list
 
+def get_question(db: Session, question_id: int):
+    # question = db.query(Question).get(question_id)        # SQLAlchemy 1.x 버전 스타일
+    question = db.get(Question, question_id)                # SQLAlchemy 2.0 버전 스타일
+    return question
