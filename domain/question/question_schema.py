@@ -12,6 +12,8 @@ Pydantic을 사용하기 위한 스키마를 생성하였다.
 """
 from pydantic import BaseModel
 
+from domain.answer.answer_schema import Answer
+
 # Question 스키마 (question_router안에 있는 router함수에 적용)
 class Question(BaseModel):
     # 총 4개의 출력 항목을 정의하고 데이터 타입을 지정
@@ -20,3 +22,4 @@ class Question(BaseModel):
     subject: str
     content: str
     create_date: datetime.datetime
+    answers: list[Answer] = []
