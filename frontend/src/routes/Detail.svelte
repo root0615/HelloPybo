@@ -1,22 +1,98 @@
 <script>
     import fastapi from "../lib/api"
+    import Error from "../components/Error.svelte"
+
     // svelte에서 export let 변수는 '이 컴포넌트는 params라는 외부 입력을 받는다'라는 선언이다.
     export let params = {}
     let question_id = params.question_id
     // console.log('question_id:' + question_id)
     // 질문 한 건에 대한 상세 정보이므로 {} 로 초기화 해야한다
-    let question = {}
+    // {answers:[]} 를 넣는 이유는 밑에 each 문에서 question.answers를 참조하고 있기 때문에 아직 조회가 안되면 오류 발생함으로 미리 넣어준다.
+    let question = {answers:[]}
+    let content = ""
+    let error = {detail:[]}
 
     function get_question() {
-        fastapi("get", "/api/question/detail/" + question_id, {}, (json) =>{
+        fastapi("get", "/api/question/detail/" + question_id, {}, (json) => {
             question = json
         })
     }
 
     get_question()
+
+    function post_answer(event) {
+        event.preventDefault()
+        let url = "/api/answer/create/" + question_id
+        // POST 방식으로 보내기위해 파라미터를 정의해준다.
+        let params = {
+            content: content
+        }
+        fastapi('post', url, params,
+            (json) => {
+                // 답변 등록이 성공했을 때 textarea 내용을 지우기위해 content를 빈 문자열로 대입했다.
+                content = ''
+                // 오류가 발생한 이후 재시도 시 성공하면 오류 메시지를 없애기 위해 초기화
+                error = {detail:[]}
+                // 상세 화면에 새로운 결과값을 반영하기 위해 get_question()으로 다시 불러들임
+                get_question()
+            },
+            // failure_callback 함수 자리로 실패할 경우에 실행된다.
+            (err_json) => {
+                error = err_json
+            }
+        )
+    }
 </script>
 
-<h1>{question.subject}</h1>
-<div>
-    {question.content}
+<div class="container my-3">
+    <!-- 질문 -->
+    <h2 class="border-bottom py-2">{question.subject}</h2>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;">{question.content}</div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2">
+                    {question.create_date}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 답변 목록 -->
+    <h5 class="border-bottom my-3 py-2">{question.answers.length}개의 답변이 있습니다.</h5>
+    {#each question.answers as answer}
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;">{answer.content}</div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2">
+                    {answer.create_date}
+                </div>
+            </div>
+        </div>
+    </div>
+    {/each}
+    <!-- 답변 등록 -->
+    <!--
+    위에서 import로 Error 컴포넌트를 가져왔기에 <Error> 태그를 사용하고
+    Error(자식) 컴포넌트 안에 export let error로 props 이름으로 지정했기에
+    왼쪽 error는 해당 이름을 그대로 써준다. 오른쪽 error는 현재 Detail(부모)의 변수 이름을 넣어준 내용이다.
+    -->
+    <Error error={error} />
+    <form method="post" class="my-3">
+        <div class="mb-3">
+            <!-- 
+            bind:value 속성을 통해 현재 textarea에서 입력되는 값을 위에 정의한 content 변수로 바인딩(동적연결)한다.
+            -->
+            <textarea rows="10" bind:value={content} class="form-control"></textarea>
+        </div>
+        <!--
+        on:click 속성을 통해 버튼을 클릭 할시 위에 정의한 post_answer 함수를 실행시키며 위의 바인딩 했던 textarea의 내용이
+        params를 통해 전달되어 답변 등록 로직이 이루어진다 생각하면 된다.
+        -->
+        <input type="submit" value="답변등록" class="btn btn-primary" on:click={post_answer} />
+    </form>
 </div>
+
+
+
+
