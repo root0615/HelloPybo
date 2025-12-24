@@ -44,23 +44,48 @@
     }
 </script>
 
-<h1>{question.subject}</h1>
-<div>
-    {question.content}
-</div>
-<ul>
+<div class="container my-3">
+    <!-- 질문 -->
+    <h2 class="border-bottom py-2">{question.subject}</h2>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;">{question.content}</div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2">
+                    {question.create_date}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 답변 목록 -->
+    <h5 class="border-bottom my-3 py-2">{question.answers.length}개의 답변이 있습니다.</h5>
     {#each question.answers as answer}
-        <li>{answer.content}</li>
+    <div class="card my-3">
+        <div class="card-body">
+            <div class="card-text" style="white-space: pre-line;">{answer.content}</div>
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-light text-dark p-2">
+                    {answer.create_date}
+                </div>
+            </div>
+        </div>
+    </div>
     {/each}
-</ul>
-<!--
-위에서 import로 Error 컴포넌트를 가져왔기에 <Error> 태그를 사용하고
-Error(자식) 컴포넌트 안에 export let error로 props 이름으로 지정했기에
-왼쪽 error는 해당 이름을 그대로 써준다. 오른쪽 error는 현재 Detail(부모)의 변수 이름을 넣어준 내용이다.
--->
-<Error error={error} />
-<form method="post">
-    <textarea rows="15" bind:value={content}></textarea>
-    <!--답변 등록 버튼을 누르면 post_answer() 함수가 실행된다.-->
-    <input type="submit" value="답변등록" on:click={post_answer}>
-</form>
+    <!-- 답변 등록 -->
+    <!--
+    위에서 import로 Error 컴포넌트를 가져왔기에 <Error> 태그를 사용하고
+    Error(자식) 컴포넌트 안에 export let error로 props 이름으로 지정했기에
+    왼쪽 error는 해당 이름을 그대로 써준다. 오른쪽 error는 현재 Detail(부모)의 변수 이름을 넣어준 내용이다.
+    -->
+    <Error error={error} />
+    <form method="post" class="my-3">
+        <div class="mb-3">
+            <textarea rows="10" bind:value={content} class="form-control"></textarea>
+        </div>
+        <input type="submit" value="답변등록" class="btn btn-primary" on:click={post_answer} />
+    </form>
+</div>
+
+
+
+

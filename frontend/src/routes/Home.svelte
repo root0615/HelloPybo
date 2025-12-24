@@ -24,13 +24,30 @@
   get_question_list()
 </script>
 
-<ul>
-  {#each question_list as question}
-    <!--
-    // a 태그에 use:link를 사용하는 이유 (해시 라우팅)
-    use:link 속성을 사용시 항상 /# 문자가 선행되며 브라우저는 이 경로를 하나의 페이지로 인식하여
-    새로 고침을 하더라도 서버로 요청이 발생하지 않는다.
-    -->
-    <li><a use:link href="/detail/{question.id}">{question.subject}</a></li>
-  {/each}
-</ul>
+<div class="container my-3">
+  <table class="table">
+    <thead>
+      <tr class="table-dark">
+        <th>번호</th>
+        <th>제목</th>
+        <th>작성일시</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each question_list as question, i}
+      <tr>
+        <td>{i + 1}</td>
+        <td>
+          <!--
+          // a 태그에 use:link를 사용하는 이유 (해시 라우팅)
+          use:link 속성을 사용시 항상 /# 문자가 선행되며 브라우저는 이 경로를 하나의 페이지로 인식하여
+          새로 고침을 하더라도 서버로 요청이 발생하지 않는다.
+          -->
+          <a use:link href="/detail/{question.id}">{question.subject}</a>
+        </td>
+        <td>{question.create_date}</td>
+      </tr>
+      {/each}
+    </tbody>
+  </table>
+</div>
