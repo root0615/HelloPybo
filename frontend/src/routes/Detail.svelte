@@ -80,8 +80,15 @@
     <Error error={error} />
     <form method="post" class="my-3">
         <div class="mb-3">
+            <!-- 
+            bind:value 속성을 통해 현재 textarea에서 입력되는 값을 위에 정의한 content 변수로 바인딩(동적연결)한다.
+            -->
             <textarea rows="10" bind:value={content} class="form-control"></textarea>
         </div>
+        <!--
+        on:click 속성을 통해 버튼을 클릭 할시 위에 정의한 post_answer 함수를 실행시키며 위의 바인딩 했던 textarea의 내용이
+        params를 통해 전달되어 답변 등록 로직이 이루어진다 생각하면 된다.
+        -->
         <input type="submit" value="답변등록" class="btn btn-primary" on:click={post_answer} />
     </form>
 </div>
