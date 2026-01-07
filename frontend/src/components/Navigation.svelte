@@ -1,11 +1,16 @@
 <script>
     import {link} from 'svelte-spa-router'
+    import {page} from '../lib/store'
 </script>
 
 <!-- 네비게이션 바 -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
     <div class="container-fluid">
-        <a use:link class="navbar-brand" href="/">Pybo</a>
+        <!-- 
+        스토어에 page번호가 저장되는 경우 첫번째 페이지로 이동하지 않아 
+        항상 첫페이지로 이동할 수 있도록 수정
+         -->
+        <a use:link class="navbar-brand" href="/" on:click={() => {$page = 0}}>Pybo</a>
         <!-- 아래 버튼 태그의 속성들은 햄버거 기능을 하는 부트스트랩 전용 코드이다. -->
         <button
             class="navbar-toggler"
