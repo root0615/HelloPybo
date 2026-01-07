@@ -2,6 +2,8 @@
     import fastapi from "../lib/api"
     import Error from "../components/Error.svelte"
     import {push} from 'svelte-spa-router'
+    import moment from "moment/min/moment-with-locales"
+    moment.locale('ko')
 
     // svelte에서 export let 변수는 '이 컴포넌트는 params라는 외부 입력을 받는다'라는 선언이다.
     export let params = {}
@@ -53,7 +55,7 @@
             <div class="card-text" style="white-space: pre-line;">{question.content}</div>
             <div class="d-flex justify-content-end">
                 <div class="badge bg-light text-dark p-2">
-                    {question.create_date}
+                    {moment(question.create_date).format("YYYY년 MM월 DD일 a hh:mm")}
                 </div>
             </div>
         </div>
@@ -67,7 +69,7 @@
             <div class="card-text" style="white-space: pre-line;">{answer.content}</div>
             <div class="d-flex justify-content-end">
                 <div class="badge bg-light text-dark p-2">
-                    {answer.create_date}
+                    {moment(answer.create_date).format("YYYY년 MM월 DD일 a hh:mm")}
                 </div>
             </div>
         </div>

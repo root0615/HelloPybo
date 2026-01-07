@@ -2,6 +2,9 @@
   import fastapi from "../lib/api"
   import {link} from 'svelte-spa-router'
   import {page} from '../lib/store'
+  // 한국의 날짜 형식으로 표시하기위해 "ko"라는 값으로 로케일 설정을 해야한다.
+  import moment from 'moment/min/moment-with-locales'
+  moment.locale('ko')
 
   // question_list에 최초 빈 리스트를 초깃값으로 설정했다 만약 이렇게 하지 않을 경우 fetch 함수는 비동기 방식으로 실행되기 때문에
   // 요청하는 중에 HTML 영역의 each 문이 실행되고 값이 없어 오류가 발생한다. 따라서 반복문을 사용할 경우 해당 값을 빈 리스트로 초기화하는 것이 좋다.
@@ -77,7 +80,7 @@
           -->
           <a use:link href="/detail/{question.id}">{question.subject}</a>
         </td>
-        <td>{question.create_date}</td>
+        <td>{moment(question.create_date).format("YYYY년 MM월 DD일 a hh:mm")}</td>
       </tr>
       {/each}
     </tbody>
