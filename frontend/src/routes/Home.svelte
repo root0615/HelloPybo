@@ -71,7 +71,7 @@
     <tbody>
       {#each question_list as question, i}
       <tr>
-        <td>{i + 1}</td>
+        <td>{total - ($page - size) - i}</td>
         <td>
           <!--
           // a 태그에 use:link를 사용하는 이유 (해시 라우팅)
