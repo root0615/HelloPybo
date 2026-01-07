@@ -2,6 +2,9 @@ from fastapi import FastAPI
 # CORSMiddleware : Starlette(=FastAPI의 기반 프레임워크)에서 제공하는 미들웨어로, CORS 정책을 처리하는 역할 담당
 from starlette.middleware.cors import CORSMiddleware
 
+from domain.answer import answer_router
+from domain.question import question_router
+
 # FastAPI 서버 인스턴스 생성.
 app = FastAPI()
 
@@ -17,6 +20,11 @@ app.add_middleware(
     allow_headers=["*"],        # 허용할 요청헤더. 마찬가지로 모두 허용
 )
 
-@app.get("/hello")
-def hello():
-    return {"message": "안녕하세요 파이보"}
+# 필요 없어져서 제외함.
+# @app.get("/hello")
+# def hello():
+#     return {"message": "안녕하세요 파이보"}
+
+# ========= router 객체 등록 =========
+app.include_router(question_router.router)
+app.include_router(answer_router.router)
