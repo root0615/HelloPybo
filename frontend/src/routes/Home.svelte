@@ -79,6 +79,10 @@
           새로 고침을 하더라도 서버로 요청이 발생하지 않는다.
           -->
           <a use:link href="/detail/{question.id}">{question.subject}</a>
+          <!-- 답변 개수 -->
+          {#if question.answers.length > 0}
+          <span class="text-danger small mx-2">{question.answers.length}</span>
+          {/if}
         </td>
         <td>{moment(question.create_date).format("YYYY년 MM월 DD일 a hh:mm")}</td>
       </tr>
