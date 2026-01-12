@@ -32,6 +32,25 @@ class QuestionCreate(BaseModel):
     subject: str
     content: str
 
+    """
+    # 클래스의 메서드 함수에서 첫번째 변수가 self가 아닌 cls를 사용하는 이유
+    해당 함수는 일반적으로 인스턴스 메서드가 아니라 클래스 메서드처럼 호출된다.
+    @field_validator로 정의된 함수는 모델 인스턴스가 생성되기 전에 실행된다.
+    그러니까 [var = QuestionCreate() <-- 인스턴스화] 이 상황이 되기 전에 실행된다는 의미이다.
+    따라서 self(인스턴스)는 아직 존재하지 않고 대신 모델 클래스 자체인(QuestionCreate)가 전달된다.
+    즉, 아직 객체가 없으므로 클래스 컨텍스트에서 검증한다는 설계이다.
+    
+    v 는 현재 검증 중인 필드의 값이며 FastAPI 요청(JSON)에서 해당 필드에 들어온 원본 입력값을
+    Pydantic이 파싱한뒤 validator에 넘겨주는 값이다.
+    요청 JSON의 예시로
+    {
+        "subject": "질문 제목입니다.",
+        "content": "질문 내용입니다."
+    }
+    이렇게 들어오면 내부적으로 아래와 같이 호출된다.
+    QuestionCreate.not_empty("질문 제목입니다.")
+    QuestionCreate.not_empty("질문 내용입니다.")
+    """
     @field_validator('subject', 'content')
     def not_empty(cls, v):
         if not v or not v.strip():
