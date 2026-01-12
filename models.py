@@ -1,6 +1,23 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
+"""
+# sqlalchemy 와 alembic 에 대하여
+- ORM은 sqlalchemy, 스키마 관리 도구가 alembic
+
+# alembic 사용 흐름
+- 최초 사용 시 1회만 적용
+1. SQLAlChemy 모델 작성
+2. 명령어 입력 >> alembic init migrations
+3. alembic 설정 (env.py = sqlalchemy 만든 모델 파일 지정 경로, alembic.ini = 데이터베이스 경로 설정)
+
+- 모델 수정 및 추가 후 반복
+1. SQLAlchemy 모델 수정 및 추가 
+2. 명령어 입력 >> alembic revision --autogenerate -m "메시지"   --> 리비전 파일 생성
+3. migration 파일 검토 및 수정
+4. 명령어 입력(해당 명령어 입력시 바로 적용) >> alembic upgrade head     --> 해당 리비전파일로 데이터베이스 변경
+"""
+
 # 앞서 database.py에서 정의한 Base 클래스를 상속하기 위해 가져옴
 from database import Base
 
@@ -34,19 +51,10 @@ class Answer(Base):
     그러므로 따로 question_id에 값을 설정할 필요가 없다.
     """
 
-    """
-    # sqlalchemy 와 alembic 에 대하여
-    - ORM은 sqlalchemy, 스키마 관리 도구가 alembic
-    
-    # alembic 사용 흐름
-    - 최초 사용 시 1회만 적용
-    1. SQLAlChemy 모델 작성
-    2. 명령어 입력 >> alembic init migrations
-    3. alembic 설정 (env.py = sqlalchemy 만든 모델 파일 지정 경로, alembic.ini = 데이터베이스 경로 설정)
-    
-    - 모델 수정 및 추가 후 반복
-    1. SQLAlchemy 모델 수정 및 추가 
-    2. 명령어 입력 >> alembic revision --autogenerate -m "메시지"
-    3. migration 파일 검토 및 수정
-    4. 명령어 입력(해당 명령어 입력시 바로 적용) >> alembic upgrade head
-    """
+class User(Base):
+    __tablename__ = "user"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True, nullable=False)      # unique = True를 통해 같은 값 저장 X
+    password = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False)
