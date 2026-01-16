@@ -22,3 +22,6 @@ const persis_storage = (key, initValue) => {
 }
 
 export const page = persis_storage("page", 0)
+export const access_token = persis_storage("access_token", "")
+export const username = persis_storage("username", "")
+export const is_login = persis_storage("is_login", false)
