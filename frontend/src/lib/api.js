@@ -1,3 +1,5 @@
+import qs from "qs"
+
 const fastapi = (operation, url, params, success_callback, failure_callback) => {
     /*
     operation: 데이터를 처리하는 방법(소문자) ex) get, post, put, delete
@@ -9,6 +11,13 @@ const fastapi = (operation, url, params, success_callback, failure_callback) => 
     let method = operation
     let content_type = 'application/json'
     let body = JSON.stringify(params)   // get이 아닌 경우 이와 같이 params를 JSON 문자열로 변경
+
+    if(operation === 'login') {
+        method = 'post'
+        content_type = 'application/x-www-form-urlencoded'
+        // qs.stringify(params) : params 데이터를 콘텐트 타입 형식에 맞게끔 변환하는 역활을 한다.
+        body = qs.stringify(params)
+    }
 
     let _url = import.meta.env.VITE_SERVER_URL+url
     if(method === 'get'){

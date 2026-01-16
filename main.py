@@ -4,6 +4,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from domain.answer import answer_router
 from domain.question import question_router
+from domain.user import user_router
 
 # FastAPI 서버 인스턴스 생성.
 app = FastAPI()
@@ -28,3 +29,4 @@ app.add_middleware(
 # ========= router 객체 등록 =========
 app.include_router(question_router.router)
 app.include_router(answer_router.router)
+app.include_router(user_router.router)
